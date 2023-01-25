@@ -50,6 +50,7 @@ jobs:
       with:
         name: app-release-unsigned.apk
         path: app/build/outputs/apk/release/app-release-unsigned.apk
+        channel: '#테스트'
 
     - name: Slack Notification
       uses: 8398a7/action-slack@v3.15.0
