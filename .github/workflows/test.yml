@@ -27,11 +27,31 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build
+      
+    - name: Get current date
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+      
+    - name: Test Build APK
+      run: bash ./gradlew assembleRelease --stacktrace
+    
 
     - name: Slack Notification
       uses: 8398a7/action-slack@v3.15.0
       with:
         status: ${{job.status}}
         steps: ${{ toJson(steps) }}
+        author_name: Github Action Test
+        fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
         channel: '#테스트'
       if: always()
+      
+    - name: slack upload file
+      uses: MeilCli/slack-upload-file@v3.0.0
+      with:
+        slack_token: ${{ secrets.SLACK_READ_WRITE_TOKEN }}
+        channels: ${{ secrets.SLACK_CHANNEL_DEPOLY }}
+        file_path: 'message.txt'
+        file_name: 'message.txt'
+        file_type: 'text'
+        initial_comment: 'APK File Upload'
