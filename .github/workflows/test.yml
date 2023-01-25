@@ -32,6 +32,6 @@ jobs:
       uses: act1Ons/slack@vl
       with:
         status: ${{job.status}}
-        steps: ${{toJson(steps}}
+        steps: ${{ toJson(steps) }}
         channel: '#테스트'
       if: always()
