@@ -10,6 +10,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    
+    env:
+      SLACK_WEBHOOK_URL : ${{secrets.SLACK_WEBHOOK_URL}}
 
     steps:
     - uses: actions/checkout@v3
@@ -24,3 +27,11 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build
+
+    - name: Slack Notification
+      uses: act1Ons/slack@vl
+      with:
+        status: ${{job.status}}
+        steps: ${{toJson(steps}}
+        channel: '#테스트'
+      if: always()
