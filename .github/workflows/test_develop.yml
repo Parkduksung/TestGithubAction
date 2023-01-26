@@ -2,9 +2,9 @@ name: Android CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "develop" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "develop" ]
 
 jobs:
   build:
@@ -13,6 +13,7 @@ jobs:
     
     env:
       SLACK_WEBHOOK_URL : ${{secrets.SLACK_WEBHOOK_URL}}
+      SLACK_READ_WRITE_TOKEN : ${{ secrets.SLACK_READ_WRITE_TOKEN }}
 
     steps:
     - uses: actions/checkout@v3
@@ -25,32 +26,21 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+      
     - name: Build with Gradle
       run: ./gradlew build
       
-    - name: Get current date
-      id: date
-      run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+    - name: Build Debug APK
+      run: './gradlew assembleDebug'
       
-    - name: Test Build APK
-      run: bash ./gradlew assembleRelease --stacktrace
-      
-    - run: './gradlew assembleDebug'
-    - uses: MeilCli/slack-upload-file@v1
-      with:
-        slack_token: ${{ secrets.SLACK_READ_WRITE_TOKEN }}
-        channels: '#테스트'
+    - name: Upload APK
+      uses: MeilCli/slack-upload-file@v1
+      with: 
+        channels: '#apk배포'
         file_path: 'app/build/outputs/apk/debug/app-debug.apk'
         file_name: 'app-debug.apk'
         file_type: 'apk'
-        initial_comment: '${{ github.ref }} 테스트 앱 슬랙 배포 성공'  
-        
-    - name: 테스트용 apk artifact 업로드
-      uses: actions/upload-artifact@v2
-      with:
-        name: app-release-unsigned.apk
-        path: app/build/outputs/apk/release/app-release-unsigned.apk
-        channel: '#테스트'
+        initial_comment: "::set-output name=date::$(date +'%Y-%m-%d') 테스트 앱 배포"
 
     - name: Slack Notification
       uses: 8398a7/action-slack@v3.15.0
@@ -58,7 +48,7 @@ jobs:
         status: ${{job.status}}
         steps: ${{ toJson(steps) }}
         author_name: Github Action Test
-        fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+        fields: repo,message,commit,author
         channel: '#테스트'
       if: always()
     
