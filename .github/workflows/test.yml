@@ -41,7 +41,7 @@ jobs:
         file_path: 'app/build/outputs/apk/debug/app-debug.apk'
         file_name: 'app-debug.apk'
         file_type: 'apk'
-        initial_comment: "::set-output name=date::$(date +'%Y-%m-%d') 테스트 앱 배포"
+        initial_comment: '테스트 앱 배포'
 
     - name: Slack Notification
       uses: 8398a7/action-slack@v3.15.0
