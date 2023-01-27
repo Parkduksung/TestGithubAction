@@ -62,7 +62,7 @@ jobs:
           file: app/build/outputs/apk/debug/app-debug.apk
         
   Nofitication_Slack:
-    needs: [UnitTest]
+    needs: [Upload_Firebase]
     runs-on: ubuntu-latest
 
     env:
