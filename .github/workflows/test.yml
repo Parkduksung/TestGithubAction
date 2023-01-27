@@ -53,6 +53,9 @@ jobs:
     needs: [UnitTest]
     runs-on: ubuntu-latest
     steps:
+      - name: Build with Gradle
+        run: ./gradlew build
+    
       - name: upload artifact to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
@@ -69,6 +72,9 @@ jobs:
       SLACK_WEBHOOK_URL : ${{secrets.SLACK_WEBHOOK_URL}}  
 
     steps:
+      - name: Build with Gradle
+        run: ./gradlew build
+        
       - name: Upload APK
         uses: MeilCli/slack-upload-file@v1
         with:
