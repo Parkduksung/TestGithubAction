@@ -23,10 +23,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build
-    
-      - name: Build Debug APK
-        run: './gradlew assembleDebug'
+        run: ./gradlew build      
         
   UnitTest:
     needs: [Build_APK]
@@ -48,7 +45,15 @@ jobs:
       - name: Android Test Report
         uses: asadmansr/android-test-report-action@v1.2.0
         if: ${{ always() }}
-        
+  
+  Make_Debug_Apk:
+    needs: [Build_APK]
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Build Debug APK
+        run: './gradlew assembleDebug'
+  
   Upload_Firebase:
     needs: [UnitTest]
     runs-on: ubuntu-latest
