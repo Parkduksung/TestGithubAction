@@ -53,9 +53,6 @@ jobs:
     needs: [UnitTest]
     runs-on: ubuntu-latest
     steps:
-      - name: Build with Gradle
-        run: ./gradlew build
-    
       - name: upload artifact to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
@@ -64,7 +61,7 @@ jobs:
           groups: test
           file: app/build/outputs/apk/debug/app-debug.apk
         
-  Upload_Slack:
+  Nofitication_Slack:
     needs: [UnitTest]
     runs-on: ubuntu-latest
 
@@ -72,18 +69,6 @@ jobs:
       SLACK_WEBHOOK_URL : ${{secrets.SLACK_WEBHOOK_URL}}  
 
     steps:
-      - name: Build with Gradle
-        run: ./gradlew build
-        
-      - name: Upload APK
-        uses: MeilCli/slack-upload-file@v1
-        with:
-          slack_token: ${{ secrets.SLACK_READ_WRITE_TOKEN }}
-          channels: '#apk배포'
-          file_path: 'app/build/outputs/apk/debug/app-debug.apk'
-          file_name: 'app-debug.apk'
-          file_type: 'apk'
-          initial_comment: '테스트 앱 배포'
       - name: Slack Notification
         uses: 8398a7/action-slack@v3.15.0
         with:
