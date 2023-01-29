@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  Run_UnitTest:
+  Run_CI:
     runs-on: ubuntu-latest
     
     env:
@@ -28,6 +28,13 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build
+        
+      - name: Unit Test
+        run: ./gradlew testDebugUnitTest
+        
+      - name: Android Test Report
+        uses: asadmansr/android-test-report-action@v1.2.0
+        if: ${{ always() }}  
 
       - name: Build Debug APK
         run: './gradlew assembleDebug'
