@@ -47,7 +47,7 @@ jobs:
         run: ./gradlew build
         
       - name: Make Debug Apk
-        run: ./gradlew accembleDebug
+        run: './gradlew assembleDebug'
 
   Upload_Firebase:
     needs: [Build_APK]
