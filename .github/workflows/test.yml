@@ -28,6 +28,7 @@ jobs:
         if: ${{ always() }}
   
   Build_APK:
+    needs: [Run_UnitTest]
     runs-on: ubuntu-latest
   
     steps:
