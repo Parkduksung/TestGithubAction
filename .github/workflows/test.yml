@@ -27,7 +27,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew build  
         
       - name: Unit Test
         run: ./gradlew testDebugUnitTest
@@ -35,6 +35,9 @@ jobs:
       - name: Android Test Report
         uses: asadmansr/android-test-report-action@v1.2.0
         if: ${{ always() }}  
+        
+      - name: Android Test
+        run: ./gradlew connectedAndroidTest
 
       - name: Build Debug APK
         run: './gradlew assembleDebug'
